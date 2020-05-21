@@ -875,9 +875,9 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
             		if (!self.modtraceable) {
                         hit.base.alpha = alpha;
                         hit.circle.alpha = alpha;
-                	for (let i=0; i<hit.numbers.length; ++i)
-                	    hit.numbers[i].alpha = alpha;
-                	hit.glow.alpha = alpha * self.glowMaxOpacity;
+                		for (let i=0; i<hit.numbers.length; ++i)
+                	    	hit.numbers[i].alpha = alpha;
+                		hit.glow.alpha = alpha * self.glowMaxOpacity;
             		}
             }
             if (diff <= this.approachTime && diff > noteFullAppear) { // fading in
@@ -936,11 +936,11 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
 
             // set opacity of slider body
             function setbodyAlpha(alpha) {
-            		if (self.modtraceable) {
-                        hit.body.alpha = alpha * 0.15;
-            		} else {
-                        hit.body.alpha = alpha;
-            		}
+            	if (self.modtraceable) {
+                    hit.body.alpha = alpha * 0.15;
+            	} else {
+                    hit.body.alpha = alpha;
+            	}
                 for (let i=0; i<hit.ticks.length; ++i)
                     hit.ticks[i].alpha = alpha;
             }
