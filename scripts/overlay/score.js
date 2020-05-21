@@ -1,18 +1,19 @@
 /*
 * class: ScoreOverlay (extends PIXI.Container)
 * responsible for calculating & displaying combo, score, HP, accuracy...
-* 
+*
 * Construct params
 *   gamefield: {width, height} in real pixels
 *
 * properties
 *   tint: 24-bit integer color of display
-*   
+*
 */
 
 define([], function()
 {
     function addPlayHistory(summary) {
+    		if (summary.mods.search("AT") != -1) {return;}
         if (!window.playHistory1000) {
             window.playHistory1000 = [];
         }
@@ -59,7 +60,7 @@ define([], function()
     }
 
 
-    function ScoreOverlay(windowfield, HPdrain, scoreMultiplier) // constructor. 
+    function ScoreOverlay(windowfield, HPdrain, scoreMultiplier) // constructor.
     {
         PIXI.Container.call(this);
 
@@ -91,7 +92,7 @@ define([], function()
         this.HP4display = new LazyNumber(this.HP);
 
         this.newSpriteArray = function(len, scaleMul = 1, tint = 0xffffff) {
-            let a = new Array(len); 
+            let a = new Array(len);
             for (let i=0; i<len; ++i) {
                 a[i] = new PIXI.Sprite();
                 a[i].scale.x = a[i].scale.y = this.scaleMul * scaleMul;
@@ -250,27 +251,29 @@ define([], function()
         }
 
         function uploadScore(summary) {
-            let xhr = new XMLHttpRequest();
-            let url = "http://api.osugame.online/send/";
-            url += "?sid=" + encodeURIComponent(summary.sid);
-            url += "&bid=" + encodeURIComponent(summary.bid);
-            url += "&title=" + encodeURIComponent(summary.title);
-            url += "&version=" + encodeURIComponent(summary.version);
-            url += "&mods=" + encodeURIComponent(summary.mods);
-            url += "&grade=" + encodeURIComponent(summary.grade);
-            url += "&score=" + encodeURIComponent(summary.score);
-            url += "&combo=" + encodeURIComponent(summary.combo);
-            url += "&acc=" + encodeURIComponent(summary.acc);
-            url += "&time=" + encodeURIComponent(summary.time);
-            xhr.open("GET", url);
-            console.log(url);
-            xhr.onload = function() {
-                console.log("play record uploaded");
-            }
-            xhr.onerror = function() {
-                console.error("play record upload failed");
-            }
-            xhr.send();
+        		if (summary.mods.search("AT") == -1 && summary.mods.search("TB") == -1){
+            	let xhr = new XMLHttpRequest();
+            	let url = "http://api.osugame.online/send/";
+            	url += "?sid=" + summary.sid;
+            	url += "&bid=" + summary.bid;
+            	url += "&title=" + summary.title;
+            	url += "&version=" + summary.version;
+            	url += "&mods=" + summary.mods;
+            	url += "&grade=" + summary.grade;
+            	url += "&score=" + summary.score;
+            	url += "&combo=" + summary.combo;
+            	url += "&acc=" + summary.acc;
+            	url += "&time=" + summary.time;
+            	xhr.open("GET", url);
+            	console.log(url);
+            	xhr.onload = function() {
+            	    console.log("play record uploaded");
+            	}
+            	xhr.onerror = function() {
+            	    console.error("play record upload failed");
+            	}
+            	xhr.send();
+        		}
         }
 
         this.showSummary = function(metadata, hiterrors, retryCallback, quitCallback) {
@@ -293,8 +296,9 @@ define([], function()
                 let l = [];
                 if (game.easy) l.push("EZ");
                 if (game.daycore) l.push("DC");
-                if (game.hidden) l.push("HD");
+                if (game.hidden && !game.traceable) l.push("HD");
                 if (game.hardrock) l.push("HR");
+                if (game.traceable) l.push("TB");
                 if (game.nightcore) l.push("NC");
                 if (game.autoplay) l.push("AT");
                 if (l.length == 0) return "";
@@ -365,11 +369,16 @@ define([], function()
                 acc: (acc*100).toFixed(2)+"%",
                 time: new Date().getTime()
             }
-            addPlayHistory(summary);
-            uploadScore(summary);
+            if (summary.mods.search("AT") == -1 && summary.mods.search("TB") == -1) {
+            	addPlayHistory(summary);
+            	uploadScore(summary);
+            }else if (summary.mods.search("TB") != -1) {
+            	addPlayHistory(summary);
+            }
             // show history best
             if (window.localforage && summary.bid) {
                 window.localforage.getItem("historybest", function(err, val) {
+                	if (summary.mods.search("AT") == -1) {
                     if (err) return;
                     let historybest = 0;
                     if (val && val.size) {
@@ -384,6 +393,7 @@ define([], function()
                             if (err) console.error("failed saving best score");
                         });
                     }
+                	}
                 })
 
             }
