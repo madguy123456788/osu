@@ -39,7 +39,6 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
         self.autoplay = game.autoplay;
         self.modhidden = game.hidden;
         self.playbackRate = 1.0;
-        self.pitch = 2.0;
         if (self.game.nightcore) self.playbackRate *= 1.5;
         if (self.game.daycore) self.playbackRate *= 0.75;
         self.hideNumbers = game.hideNumbers;
@@ -874,8 +873,8 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
 
             function setcircleAlpha(alpha) {
             		if (!self.modtraceable) {
-                	hit.base.alpha = alpha;
-                	hit.circle.alpha = alpha;
+                        hit.base.alpha = alpha;
+                        hit.circle.alpha = alpha;
                 	for (let i=0; i<hit.numbers.length; ++i)
                 	    hit.numbers[i].alpha = alpha;
                 	hit.glow.alpha = alpha * self.glowMaxOpacity;
@@ -938,9 +937,9 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
             // set opacity of slider body
             function setbodyAlpha(alpha) {
             		if (self.modtraceable) {
-                	hit.body.alpha = alpha * 0.15;
+                        hit.body.alpha = alpha * 0.15;
             		} else {
-            			hit.body.alpha = alpha;
+                        hit.body.alpha = alpha;
             		}
                 for (let i=0; i<hit.ticks.length; ++i)
                     hit.ticks[i].alpha = alpha;
