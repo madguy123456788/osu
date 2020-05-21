@@ -296,7 +296,7 @@ define([], function()
                 let l = [];
                 if (game.easy) l.push("EZ");
                 if (game.daycore) l.push("DC");
-                if (game.hidden && !game.traceable) l.push("HD");
+                if (game.hidden) l.push("HD");
                 if (game.hardrock) l.push("HR");
                 if (game.traceable) l.push("TB");
                 if (game.nightcore) l.push("NC");
