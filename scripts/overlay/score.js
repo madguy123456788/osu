@@ -13,7 +13,7 @@
 define([], function()
 {
     function addPlayHistory(summary) {
-    		if (summary.mods.search("AT") != -1) {return;}
+        if (summary.mods.search("AT") != -1) return;
         if (!window.playHistory1000) {
             window.playHistory1000 = [];
         }
@@ -251,7 +251,7 @@ define([], function()
         }
 
         function uploadScore(summary) {
-        		if (summary.mods.search("AT") == -1 && summary.mods.search("TB") == -1){
+            if (summary.mods.search("AT") == -1 && summary.mods.search("TB") == -1){
             	let xhr = new XMLHttpRequest();
             	let url = "http://api.osugame.online/send/";
             	url += "?sid=" + summary.sid;
@@ -273,7 +273,7 @@ define([], function()
             	    console.error("play record upload failed");
             	}
             	xhr.send();
-        		}
+            }
         }
 
         this.showSummary = function(metadata, hiterrors, retryCallback, quitCallback) {
@@ -370,29 +370,29 @@ define([], function()
                 time: new Date().getTime()
             }
             if (summary.mods.search("AT") == -1 && summary.mods.search("TB") == -1) {
-            	addPlayHistory(summary);
-            	uploadScore(summary);
+                addPlayHistory(summary);
+                uploadScore(summary);
             }else if (summary.mods.search("TB") != -1) {
-            	addPlayHistory(summary);
+                addPlayHistory(summary);
             }
             // show history best
             if (window.localforage && summary.bid) {
                 window.localforage.getItem("historybest", function(err, val) {
-                	if (summary.mods.search("AT") == -1) {
-                    if (err) return;
-                    let historybest = 0;
-                    if (val && val.size) {
-                        historybest = val.get(summary.bid) || 0;
-                    }
-                    newdiv(left, "history-best", historybest.toString());
-                    if (parseInt(summary.score) > historybest) {
-                        if (!val || !val.size)
-                            val = new Map();
-                        val.set(summary.bid, parseInt(summary.score));
-                        window.localforage.setItem("historybest", val, function(err, val){
-                            if (err) console.error("failed saving best score");
-                        });
-                    }
+                    if (summary.mods.search("AT") == -1) {
+                        if (err) return;
+                        let historybest = 0;
+                        if (val && val.size) {
+                            historybest = val.get(summary.bid) || 0;
+                        }
+                        newdiv(left, "history-best", historybest.toString());
+                        if (parseInt(summary.score) > historybest) {
+                            if (!val || !val.size)
+                                val = new Map();
+                            val.set(summary.bid, parseInt(summary.score));
+                            window.localforage.setItem("historybest", val, function(err, val){
+                                if (err) console.error("failed saving best score");
+                            });
+                        }
                 	}
                 })
 
