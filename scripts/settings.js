@@ -23,8 +23,6 @@ function setOptionPanel() {
 		snakein: true,
 		snakeout: true,
 		autofullscreen: false,
-		sysdpi: true,
-		dpiscale: 1.0,
 
 		disableWheel: false,
 		disableButton: false,
@@ -48,6 +46,7 @@ function setOptionPanel() {
         hardrock: false,
         nightcore: false,
         hidden: false,
+        traceable: false,
 		autoplay: false,
 
         hideNumbers: false,
@@ -68,8 +67,6 @@ function setOptionPanel() {
 	        window.game.snakein = this.snakein;
 	        window.game.snakeout = this.snakeout;
 	        window.game.autofullscreen = this.autofullscreen;
-	        window.game.overridedpi = !this.sysdpi;
-	        window.game.dpiscale = this.dpiscale;
 
 	        window.game.allowMouseScroll = !this.disableWheel;
 	        window.game.allowMouseButton = !this.disableButton;
@@ -89,6 +86,7 @@ function setOptionPanel() {
 	        window.game.hardrock = this.hardrock;
 	        window.game.nightcore = this.nightcore;
 	        window.game.hidden = this.hidden;
+	        window.game.traceable = this.traceable;
 	        window.game.autoplay = this.autoplay;
 
 	        window.game.hideNumbers = this.hideNumbers;
@@ -240,8 +238,6 @@ function setOptionPanel() {
 	bindcheck("snakein-check", "snakein");
 	bindcheck("snakeout-check", "snakeout");
 	bindcheck("autofullscreen-check", "autofullscreen");
-	bindcheck("sysdpi-check", "sysdpi");
-	bindrange("dpi-range", "dpiscale", function(v){return v.toFixed(2)+"x"});
 
 	// input settings
 	bindcheck("disable-wheel-check", "disableWheel");
@@ -261,7 +257,9 @@ function setOptionPanel() {
 	// mods
 	bindExclusiveCheck("easy-check", "easy", "hardrock-check", "hardrock");
 	bindExclusiveCheck("daycore-check", "daycore", "nightcore-check", "nightcore");
-	bindcheck("hidden-check", "hidden");
+	bindExclusiveCheck("hidden-check", "hidden", "traceable-check", "traceable");
+	// bindcheck("hidden-check", "hidden");
+	// bindcheck("traceable-check", "traceable");
 	bindcheck("autoplay-check", "autoplay");
 
 	// skin

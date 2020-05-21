@@ -35,9 +35,11 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
         self.currentHitIndex = 0; // index for all hit objects
         self.ended = false;
         // mods
+        self.modtraceable = game.traceable;
         self.autoplay = game.autoplay;
         self.modhidden = game.hidden;
         self.playbackRate = 1.0;
+        self.pitch = 2.0;
         if (self.game.nightcore) self.playbackRate *= 1.5;
         if (self.game.daycore) self.playbackRate *= 0.75;
         self.hideNumbers = game.hideNumbers;
@@ -139,7 +141,8 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
         if (game.daycore) scoreModMultiplier *= 0.30;
         if (game.hardrock) scoreModMultiplier *= 1.06;
         if (game.nightcore) scoreModMultiplier *= 1.12;
-        if (game.hidden) scoreModMultiplier *= 1.06;
+        if (self.modhidden) scoreModMultiplier *= 1.06;
+        if (self.modtraceable) scoreModMultiplier *= 1.1;
 
         self.scoreOverlay = new ScoreOverlay({width: game.window.innerWidth, height: game.window.innerHeight}, this.HP, scoreModMultiplier);
         self.circleRadius = (109 - 9 * this.CS)/2; // unit: osu! pixel
@@ -236,7 +239,7 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
                 self.game.masterVolume -= e.deltaY * 0.002;
                 if (self.game.masterVolume < 0) {
                     self.game.masterVolume = 0;
-                } 
+                }
                 if (self.game.masterVolume > 1) {
                     self.game.masterVolume = 1;
                 }
@@ -446,10 +449,10 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
             }
             let index = hit.index + 1;
             let basedep = 4.9999 - 0.0001 * hit.hitIndex;
-
+            
             hit.base = newHitSprite("disc.png", basedep, 0.5);
             hit.base.tint = combos[hit.combo % combos.length];
-
+						
             hit.circle = newHitSprite("hitcircleoverlay.png", basedep, 0.5);
             hit.glow = newHitSprite("ring-glow.png", basedep+2, 0.46);
             hit.glow.tint = combos[hit.combo % combos.length];
@@ -870,11 +873,13 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
             let noteFullAppear = this.approachTime -hit.objectFadeInTime; // duration of opaque hit circle when approaching
 
             function setcircleAlpha(alpha) {
-                hit.base.alpha = alpha;
-                hit.circle.alpha = alpha;
-                for (let i=0; i<hit.numbers.length; ++i)
-                    hit.numbers[i].alpha = alpha;
-                hit.glow.alpha = alpha * self.glowMaxOpacity;
+            		if (!self.modtraceable) {
+                	hit.base.alpha = alpha;
+                	hit.circle.alpha = alpha;
+                	for (let i=0; i<hit.numbers.length; ++i)
+                	    hit.numbers[i].alpha = alpha;
+                	hit.glow.alpha = alpha * self.glowMaxOpacity;
+            		}
             }
             if (diff <= this.approachTime && diff > noteFullAppear) { // fading in
                 let alpha = (this.approachTime - diff) /hit.objectFadeInTime;
@@ -932,7 +937,11 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
 
             // set opacity of slider body
             function setbodyAlpha(alpha) {
-                hit.body.alpha = alpha;
+            		if (self.modtraceable) {
+                	hit.body.alpha = alpha * 0.15;
+            		} else {
+            			hit.body.alpha = alpha;
+            		}
                 for (let i=0; i<hit.ticks.length; ++i)
                     hit.ticks[i].alpha = alpha;
             }
@@ -1065,7 +1074,7 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
                     // follow circie immediately emerges and gradually enlarges
                     hit.follow.visible = true;
                     if (this.game.down && isfollowing)
-                        resizeFollow(hit, time, 1 / this.followZoomInTime); // expand 
+                        resizeFollow(hit, time, 1 / this.followZoomInTime); // expand
                     else
                         resizeFollow(hit, time, -1 / this.followZoomInTime); // shrink
                     let followscale = hit.followSize * 0.45 * this.hitSpriteScale;
@@ -1306,6 +1315,7 @@ function(Osu, setPlayerActions, SliderMesh, ScoreOverlay, VolumeMenu, LoadingMen
             self.started = true;
             self.osu.audio.gain.gain.value = self.game.musicVolume * self.game.masterVolume;
             self.osu.audio.playbackRate = self.playbackRate;
+            self.osu.audio.pitch = 1.0;
             self.osu.audio.play(self.backgroundFadeTime + self.wait);
         };
 
