@@ -6,6 +6,13 @@ Powered by [PixiJS](https://www.pixijs.com). Beatmap source: [Sayobot](https://o
 
 Note: This is an unofficial implementation of [osu!](https://osu.ppy.sh). Scoring and judgement rules differ from official versions. Some music might not be perfectly syncing. Modes other than osu! (std) are unsupported.
 
+This branch of this fork Contains a new mod, `Traceable`. The traceable mod is an existing mod in osu!Lazer that only shows the approach circles and slider edges. It is effectively the opposite of hidden and, as such, cannot be activated with hidden. In this version Traceable is also an unranked mod and provides a 10% score Increase, maps finished with this mod will not be submitted to scoring servers.
+
+In this branch, autoplay has also been changed slightly. Maps finished with autoplay will not:
+* be submitted to scoring servers
+* show nor affect the player's History Best Score
+* be added to the player's Map History
+
 ## Screenshots
 
 web page:
