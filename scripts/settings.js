@@ -30,10 +30,12 @@ function setOptionPanel() {
 		K2name: 'X',
 		Kpausename: 'SPACE',
 		Kpause2name: 'ESC',
+		Kskipname: 'CTRL',
 		K1keycode: 90,
 		K2keycode: 88,
 		Kpausekeycode: 32,
 		Kpause2keycode: 27,
+		kskipkeycode: 17,
 
 		mastervolume: 60,
 		effectvolume: 100,
@@ -73,7 +75,8 @@ function setOptionPanel() {
 	        window.game.K1keycode = this.K1keycode;
 	        window.game.K2keycode = this.K2keycode;
 	        window.game.ESCkeycode = this.Kpausekeycode;
-	        window.game.ESC2keycode = this.Kpause2keycode;
+			window.game.ESC2keycode = this.Kpause2keycode;
+			window.game.CTRLkeycode = this.kskipkeycode;
 
 	        window.game.masterVolume = this.mastervolume / 100;
 	        window.game.effectVolume = this.effectvolume / 100;
@@ -212,6 +215,8 @@ function setOptionPanel() {
 					gamesettings[keynameitem] = "SPACE";
 				if (gamesettings[keynameitem] == "ESCAPE")
 					gamesettings[keynameitem] = "ESC";
+				if (gamesettings[keynameitem] == "CONTROL")
+					gamesettings[keynameitem] = "CTRL";
 				btn.value = gamesettings[keynameitem];
 				gamesettings.loadToGame();
 		        saveToLocal();
@@ -246,6 +251,7 @@ function setOptionPanel() {
 	bindkeyselector("rbutton1select", "K2name", "K2keycode");
 	bindkeyselector("pausebutton2select", "Kpause2name", "Kpause2keycode");
 	bindkeyselector("pausebuttonselect", "Kpausename", "Kpausekeycode");
+	bindkeyselector("skipbuttonselect", "Kskipname", "Kskipkeycode");
 
 	// audio settings
 	bindrange("mastervolume-range", "mastervolume", function(v){return v+"%"});
